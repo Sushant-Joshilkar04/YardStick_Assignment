@@ -42,7 +42,7 @@ export default function CategoryPieChart({ transactions }) {
                   <Cell key={i} fill={COLORS[i % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(v) => `$${v.toFixed(2)}`} />
+              <Tooltip formatter={(v) => `₹${v.toFixed(2)}`} />
               <Legend />
             </PieChart>
           </ResponsiveContainer>

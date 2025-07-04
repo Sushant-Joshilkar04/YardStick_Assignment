@@ -21,7 +21,7 @@ export default function DashboardSummary({ transactions }) {
           <CardTitle>Total Expenses</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-3xl font-bold">${total.toFixed(2)}</div>
+          <div className="text-3xl font-bold">₹{total.toFixed(2)}</div>
         </CardContent>
       </Card>
       <Card>
@@ -33,7 +33,7 @@ export default function DashboardSummary({ transactions }) {
             {categories.map(cat => (
               <li key={cat} className="flex justify-between items-center">
                 <span>{cat}</span>
-                <span>${byCategory[cat].toFixed(2)}</span>
+                <span>₹{byCategory[cat].toFixed(2)}</span>
               </li>
             ))}
           </ul>
@@ -48,7 +48,7 @@ export default function DashboardSummary({ transactions }) {
             {recent.map(t => (
               <li key={t.id} className="flex justify-between text-sm">
                 <span>{t.description}</span>
-                <span>${t.amount.toFixed(2)}</span>
+                <span>₹{t.amount.toFixed(2)}</span>
               </li>
             ))}
           </ul>

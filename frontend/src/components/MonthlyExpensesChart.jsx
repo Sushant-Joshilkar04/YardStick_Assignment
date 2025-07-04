@@ -50,10 +50,10 @@ export default function MonthlyExpensesChart({ transactions }) {
               <YAxis 
                 fontSize={12}
                 tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                tickFormatter={(value) => `$${value}`}
+                tickFormatter={(value) => `₹${value}`}
               />
               <Tooltip 
-                formatter={(value) => [`$${value.toFixed(2)}`, 'Expenses']}
+                formatter={(value) => [`₹${value.toFixed(2)}`, 'Expenses']}
                 labelStyle={{ color: 'hsl(var(--foreground))' }}
                 contentStyle={{ 
                   backgroundColor: 'hsl(var(--background))',

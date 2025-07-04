@@ -2,6 +2,8 @@ import connectToDB from '@/lib/mongoDB';
 import Transaction from '@/models/transaction';
 import { NextResponse } from 'next/server';
 
+const ALLOWED_CATEGORIES = ['Food', 'Transport', 'Shopping', 'Health', 'Utilities', 'Other'];
+
 export async function GET() {
   try {
     await connectToDB();
@@ -29,8 +31,8 @@ export async function POST(req) {
   try {
     const { amount, description, date, category } = await req.json();
 
-    if (!amount || !description || !date || !category) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    if (!amount || !description || !date || !category || !ALLOWED_CATEGORIES.includes(category)) {
+      return NextResponse.json({ error: 'Missing or invalid required fields' }, { status: 400 });
     }
 
     if (parseFloat(amount) <= 0) {

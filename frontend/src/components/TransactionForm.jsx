@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function TransactionForm({ onSubmit, initialData = {} }) {
   const [amount, setAmount] = useState(initialData.amount || '');
@@ -49,22 +50,19 @@ export default function TransactionForm({ onSubmit, initialData = {} }) {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-      <select
-        name="category"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className="input-class"
-        required
-      >
-        <option value="">Select Category</option>
-        <option value="Food">Food</option>
-        <option value="Transport">Transport</option>
-        <option value="Shopping">Shopping</option>
-        <option value="Health">Health</option>
-        <option value="Utilities">Utilities</option>
-        <option value="Other">Other</option>
-      </select>
-
+      <Select value={category} onValueChange={setCategory} required>
+        <SelectTrigger className="input-class">
+          <SelectValue placeholder="Select Category" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="Food">Food</SelectItem>
+          <SelectItem value="Transport">Transport</SelectItem>
+          <SelectItem value="Shopping">Shopping</SelectItem>
+          <SelectItem value="Health">Health</SelectItem>
+          <SelectItem value="Utilities">Utilities</SelectItem>
+          <SelectItem value="Other">Other</SelectItem>
+        </SelectContent>
+      </Select>
       <Input
         type="date"
         value={date}
