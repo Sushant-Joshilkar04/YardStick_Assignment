@@ -6,12 +6,15 @@ import TransactionList from '@/components/TransactionList';
 import MonthlyExpensesChart from '@/components/MonthlyExpensesChart';
 import { Toaster } from '@/components/ui/sonner'; 
 import { toast } from 'sonner'; 
+import DashboardSummary from '@/components/DashboardSummary';
+import CategoryPieChart from '@/components/CategoryPieChart';
 
 export default function Home() {
   const [transactions, setTransactions] = useState([]);
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [prefillCategory, setPrefillCategory] = useState('');
 
   useEffect(() => {
     fetchTransactions();
@@ -91,6 +94,11 @@ export default function Home() {
     setEditingTransaction(null);
   };
 
+  const handleAddCategoryExpense = (category) => {
+    setPrefillCategory(category);
+    setEditingTransaction(null); 
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -104,7 +112,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background p-4">
-      <Toaster /> {/* Sonner Toaster */}
+      <Toaster />
       <div className="container mx-auto max-w-6xl">
         <header className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">
@@ -121,24 +129,26 @@ export default function Home() {
           </div>
         )}
 
+        <DashboardSummary transactions={transactions} onAddCategoryExpense={handleAddCategoryExpense} />
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <div className="lg:col-span-1">
             <TransactionForm
               onSubmit={editingTransaction ? handleEditTransaction : handleAddTransaction}
-              initialData={editingTransaction}
+              initialData={editingTransaction || { category: prefillCategory }}
               onCancel={handleCancelEdit}
             />
           </div>
-          
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-6">
             <MonthlyExpensesChart transactions={transactions} />
+            <CategoryPieChart transactions={transactions} />
           </div>
         </div>
 
         <TransactionList
-           transactions={transactions}
-           onEdit={fetchTransactions} 
-           onDelete={handleDeleteTransaction}
+          transactions={transactions}
+          onEdit={fetchTransactions}
+          onDelete={handleDeleteTransaction}
         />
       </div>
     </div>

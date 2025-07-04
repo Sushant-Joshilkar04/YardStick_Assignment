@@ -12,6 +12,7 @@ export async function GET() {
       amount: transaction.amount,
       description: transaction.description,
       date: transaction.date.toISOString().split('T')[0],
+      category: transaction.category, 
       createdAt: transaction.createdAt,
       updatedAt: transaction.updatedAt
     }));
@@ -23,11 +24,12 @@ export async function GET() {
   }
 }
 
+
 export async function POST(req) {
   try {
-    const { amount, description, date } = await req.json();
+    const { amount, description, date, category } = await req.json();
 
-    if (!amount || !description || !date) {
+    if (!amount || !description || !date || !category) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -40,7 +42,8 @@ export async function POST(req) {
     const transaction = new Transaction({
       amount: parseFloat(amount),
       description: description.trim(),
-      date: new Date(date)
+      date: new Date(date),
+      category
     });
 
     const savedTransaction = await transaction.save();
@@ -50,6 +53,7 @@ export async function POST(req) {
       amount: savedTransaction.amount,
       description: savedTransaction.description,
       date: savedTransaction.date.toISOString().split('T')[0],
+      category: savedTransaction.category,
       createdAt: savedTransaction.createdAt,
       updatedAt: savedTransaction.updatedAt
     };

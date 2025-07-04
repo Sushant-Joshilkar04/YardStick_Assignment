@@ -3,17 +3,17 @@ import Transaction from '@/models/transaction';
 import mongoose from 'mongoose';
 import { NextResponse } from 'next/server';
 
-export async function PUT(req, { params }) {
-  const { id } = params;
+export async function PUT(req, context) {
+  const { id } = await context.params; 
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!id || !mongoose.Types.ObjectId.isValid(id)) {
     return NextResponse.json({ error: 'Invalid transaction ID' }, { status: 400 });
   }
 
   try {
-    const { amount, description, date } = await req.json();
+    const { amount, description, date, category } = await req.json();
 
-    if (!amount || !description || !date) {
+    if (!amount || !description || !date || !category) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -28,7 +28,8 @@ export async function PUT(req, { params }) {
       {
         amount: parseFloat(amount),
         description: description.trim(),
-        date: new Date(date)
+        date: new Date(date),
+        category
       },
       {
         new: true,
@@ -45,6 +46,7 @@ export async function PUT(req, { params }) {
       amount: updatedTransaction.amount,
       description: updatedTransaction.description,
       date: updatedTransaction.date.toISOString().split('T')[0],
+      category: updatedTransaction.category,
       createdAt: updatedTransaction.createdAt,
       updatedAt: updatedTransaction.updatedAt
     };
@@ -63,7 +65,7 @@ export async function PUT(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
-  const { id } = params;
+  const { id } = await params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return NextResponse.json({ error: 'Invalid transaction ID' }, { status: 400 });
@@ -84,3 +86,4 @@ export async function DELETE(req, { params }) {
     return NextResponse.json({ error: 'Failed to delete transaction' }, { status: 500 });
   }
 }
+

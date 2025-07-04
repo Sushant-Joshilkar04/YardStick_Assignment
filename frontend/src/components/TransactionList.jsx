@@ -11,6 +11,7 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
   const [editDescription, setEditDescription] = useState('');
   const [editAmount, setEditAmount] = useState('');
   const [editDate, setEditDate] = useState('');
+  const [editCategory, setEditCategory] = useState('');
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString();
@@ -28,6 +29,7 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
     setEditDescription(transaction.description);
     setEditAmount(transaction.amount.toString());
     setEditDate(transaction.date);
+    setEditCategory(transaction.category);
   };
 
   const cancelEditing = () => {
@@ -35,6 +37,7 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
     setEditDescription('');
     setEditAmount('');
     setEditDate('');
+    setEditCategory('');
   };
 
   const handleEditSubmit = async (e, transaction) => {
@@ -43,7 +46,7 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
       alert('Please fill all fields');
       return;
     }
-    // Call the API directly here
+
     try {
       const response = await fetch(`/api/transactions/${transaction.id}`, {
         method: 'PUT',
@@ -54,10 +57,11 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
           amount: parseFloat(editAmount),
           description: editDescription.trim(),
           date: editDate,
+          category: editCategory,
         }),
       });
       if (!response.ok) throw new Error('Failed to update transaction');
-      if (onEdit) await onEdit(); // Optionally refresh the list
+      if (onEdit) await onEdit(); 
     } catch (err) {
       alert('Failed to update transaction');
     }
@@ -104,6 +108,20 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
                         className="w-40"
                       />
                     </div>
+                    <select
+                      value={editCategory}
+                      onChange={(e) => setEditCategory(e.target.value)}
+                      required
+                      className="mt-1"
+                    >
+                      <option value="">Select Category</option>
+                      <option value="Food">Food</option>
+                      <option value="Transport">Transport</option>
+                      <option value="Shopping">Shopping</option>
+                      <option value="Health">Health</option>
+                      <option value="Utilities">Utilities</option>
+                      <option value="Other">Other</option>
+                    </select>
                   </div>
                   <div className="flex gap-2 ml-4">
                     <Button size="sm" type="submit" variant="success">

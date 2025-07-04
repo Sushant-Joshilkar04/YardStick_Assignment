@@ -1,13 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
-export default function TransactionForm({ onSubmit }) {
-  const [amount, setAmount] = useState('');
-  const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
+export default function TransactionForm({ onSubmit, initialData = {} }) {
+  const [amount, setAmount] = useState(initialData.amount || '');
+  const [description, setDescription] = useState(initialData.description || '');
+  const [date, setDate] = useState(initialData.date || '');
+  const [category, setCategory] = useState(initialData.category || '');
+
+  useEffect(() => {
+    setCategory(initialData.category || '');
+  }, [initialData.category]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,11 +26,13 @@ export default function TransactionForm({ onSubmit }) {
       amount: parseFloat(amount),
       description: description.trim(),
       date,
+      category
     });
 
     setAmount('');
     setDescription('');
     setDate('');
+    setCategory('');
   };
 
   return (
@@ -42,6 +49,22 @@ export default function TransactionForm({ onSubmit }) {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
+      <select
+        name="category"
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        className="input-class"
+        required
+      >
+        <option value="">Select Category</option>
+        <option value="Food">Food</option>
+        <option value="Transport">Transport</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Health">Health</option>
+        <option value="Utilities">Utilities</option>
+        <option value="Other">Other</option>
+      </select>
+
       <Input
         type="date"
         value={date}
